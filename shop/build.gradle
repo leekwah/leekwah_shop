@@ -26,6 +26,7 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
 	// implementation 'org.springframework.boot:spring-boot-starter-security'
 
+
 	// https://mvnrepository.com/artifact/org.modelmapper/modelmapper
 	implementation 'org.modelmapper:modelmapper:3.1.1'
 	// https://mvnrepository.com/artifact/javax.validation/validation-api
@@ -39,6 +40,8 @@ dependencies {
 	implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
 	// https://mvnrepository.com/artifact/com.h2database/h2
 	implementation 'com.h2database:h2:2.1.214'
+	// https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
