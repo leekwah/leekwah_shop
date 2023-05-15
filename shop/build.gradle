@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.11'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com'
@@ -31,6 +32,9 @@ dependencies {
 	implementation 'javax.validation:validation-api:2.0.1.Final'
 	// https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
 	implementation 'com.querydsl:querydsl-jpa:5.0.0'
+	// https://mvnrepository.com/artifact/com.querydsl/querydsl-apt
+	implementation 'com.querydsl:querydsl-apt:5.0.0'
+
 	// https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
 	implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
 	// https://mvnrepository.com/artifact/com.h2database/h2
@@ -45,4 +49,30 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+/*
+ * queryDSL 설정 추가
+ */
+// querydsl에서 사용할 경로 설정
+def querydslDir = "$buildDir/generated/querydsl"
+// JPA 사용 여부와 사용할 경로를 설정
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+// build 시 사용할 sourceSet 추가
+sourceSets {
+	main.java.srcDir querydslDir
+}
+// querydsl 컴파일시 사용할 옵션 설정
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
+}
+// querydsl 이 compileClassPath 를 상속하도록 설정
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
 }
