@@ -2,6 +2,7 @@ package com.shop.entity;
 
 import com.shop.constant.ItemSellStatus;
 import com.shop.repository.ItemRepository;
+import com.shop.repository.MemberRepository;
 import com.shop.repository.OrderRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ class OrderTest {
     @Autowired
     ItemRepository itemRepository;
 
+    @Autowired
+    MemberRepository memberRepository;
+
     @PersistenceContext
     EntityManager em;
 
@@ -44,6 +48,28 @@ class OrderTest {
         item.setUpdateTime(LocalDateTime.now());
 
         return item;
+    }
+
+    private Order createOrder() { // 주문 데이터를 생성해서 저장하는 메서드를 만든다.
+        Order order = new Order();
+
+        for (int i=0; i<3; i++) {
+            Item item = this.createItem();
+            itemRepository.save(item);
+            OrderItem orderItem = new OrderItem();
+            orderItem.setItem(item);
+            orderItem.setCount(10);
+            orderItem.setOrderPrice(1000);
+            orderItem.setOrder(order);
+            order.getOrderItems().add(orderItem);
+        }
+
+        Member member = new Member();
+        memberRepository.save(member);
+
+        order.setMember(member);
+        orderRepository.save(order);
+        return order;
     }
 
     @Test
@@ -68,5 +94,13 @@ class OrderTest {
         Order savedOrder = orderRepository.findById(order.getId()) // 영속성 컨텍스트를 초기화했기 때문에 데이터베이스에서 주문 엔티티를 조회한다. SELECT 쿼리문이 실행되는 것을 콘솔창에서 확인할 수 있다.
                 .orElseThrow(EntityNotFoundException::new);
         assertEquals(3, savedOrder.getOrderItems().size()); // itemOrder 엔티티 3개가 실제로 데이터베이스에 저장되었는지 검사한다.
+    }
+
+    @Test
+    @DisplayName("고아 객체 제거 테스트")
+    public void orphanRemovalTest() {
+        Order order = this.createOrder();
+        order.getOrderItems().remove(0); // order 엔티티에서 관리하고 있는 orderItem 리스트의 0번째 인덱스 요소를 제거한다.
+        em.flush();
     }
 }
