@@ -31,11 +31,15 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
         ;
 
-        http.authorizeRequests()
+        http.authorizeRequests() // 시큐리티 처리에 HttpServletRequest를 이용한다는 것을 의미한다.
                 .mvcMatchers("/css/**", "/js/**", "/img/**").permitAll()
-                .mvcMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
-                .mvcMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .mvcMatchers("/", "/members/**", "/item/**", "/images/**").permitAll() // permitAll() 메서드를 이용해 모든 사용자가 인증(로그인)없이 해당 경로에 접근할 수 있도록 설정한다.
+                .mvcMatchers("/admin/**").hasRole("ADMIN") // '/admin'으로 시작하는 경로는 해당 계정이 ADMIN ROLE일 경우에만 접근 가능하도록 설정한다.
+                .anyRequest().authenticated() // 2, 3에서 제외한 나머지 경로들은 모두 인증을 요구하도록 설정한다.
+        ;
+
+        http.exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
         ;
 
         return http.build();
