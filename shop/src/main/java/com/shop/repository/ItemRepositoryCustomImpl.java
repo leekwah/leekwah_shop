@@ -1,12 +1,16 @@
 package com.shop.repository;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression; // Querydsl의 BooleanExpression를 통해서 where절에서 사용할 수 있는 값을 지원한다.
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.constant.ItemSellStatus;
 import com.shop.dto.ItemSearchDto;
+import com.shop.dto.MainItemDto;
+import com.shop.dto.QMainItemDto;
 import com.shop.entity.Item;
 import com.shop.entity.QItem;
+import com.shop.entity.QItemImg;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -57,6 +61,10 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom { // ItemR
         return null;
     }
 
+    private BooleanExpression itemNmLike(String searchQuery) { // 검색어가 null이 아니면 상품명에 해당 검색어가 포함되는 상품을 조회하는 조건을 반환한다.
+        return StringUtils.isEmpty(searchQuery) ? null : QItem.item.itemNm.like("%" + searchQuery + "%");
+    }
+
     @Override
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         List<Item> content = queryFactory // queryFactory를 이용해서 쿼리를 생성한 뒤에 List에 담아준다.
@@ -78,5 +86,41 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom { // ItemR
                 .fetchOne(); // 단 건을 조회할 때 사용한다. 결과가 없을 때는 null을 반환하고, 결과가 둘 이상일 경우에는 NonUniqueResultException 예외를 발생시킨다.
 
         return new PageImpl<>(content, pageable, total); // 조회한 데이터를 Page 클래스의 구현체인 PageImpl 객체로 리턴한다.
+    }
+
+    @Override
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        QItem item = QItem.item;
+        QItemImg itemImg = QItemImg.itemImg;
+
+        List<MainItemDto> content = queryFactory
+                .select(
+                        new QMainItemDto( // QMainItemDto의 생성자에 반환할 값들을 넣어준다. @QueryProjection을 사용하면 DTO로 바로 조회가 가능하다. 엔티티 조회 후 DTO로 변환하는 과정을 줄일 수 있다.
+                                item.id,
+                                item.itemNm,
+                                item.itemDetail,
+                                itemImg.imgUrl,
+                                item.price
+                        )
+                )
+                .from(itemImg)
+                .join(itemImg.item, item) // itemImg와 item을 내부 조인한다.
+                .where(itemImg.repImgYn.eq("Y")) // 상품 이미지의 경우 대표 상품 이미지만 불러온다.
+                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+                .orderBy(item.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = queryFactory
+                .select(Wildcard.count)
+                .from(itemImg)
+                .join(itemImg.item, item)
+                .where(itemImg.repImgYn.eq("Y"))
+                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+                .fetchOne();
+
+
+        return new PageImpl<>(content, pageable, total);
     }
 }
