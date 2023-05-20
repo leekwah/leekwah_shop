@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item> { // Repository에 Predicate를 파라미터로 전달하기 위해서 QuerydslPredicateExecutor 인터페이스를 상속받는다.
+public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item>, ItemRepositoryCustom { // Repository에 Predicate를 파라미터로 전달하기 위해서 QuerydslPredicateExecutor 인터페이스를 상속받는다.
     List<Item> findByItemNm(String itemNm); // 상품명으로 조회하기 위해서 itemNm을 파라미터로 넣어준다.
 
     List<Item> findByItemNmOrItemDetail(String itemNm, String itemDetail); // 상품을 상품명과 상품 상세 설명을 OR 조건을 이용하여 조회하는 쿼리 메서드이다.
