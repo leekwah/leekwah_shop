@@ -1,6 +1,5 @@
 package com.shop.repository;
 
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression; // Querydsl의 BooleanExpression를 통해서 where절에서 사용할 수 있는 값을 지원한다.
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
