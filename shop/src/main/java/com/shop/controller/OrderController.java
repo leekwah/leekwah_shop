@@ -34,6 +34,7 @@ public class OrderController {
          *  - @ResponseBody : 자바 객체를 HTTP 요청의 body로 전달
          */
 
+        // TODO : BindingResult 코드를 분리할 수 있으면 분리하기, CartController에도 동일한 코드가 있음 - 코드 중복성 제거
         if (bindingResult.hasErrors()) { // 주문 정보를 받는 orderDto 객체에 데이터 바인딩 시 에러가 있는지 검사한다.
             StringBuilder sb = new StringBuilder();
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
