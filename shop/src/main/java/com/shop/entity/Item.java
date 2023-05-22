@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+
 @Entity
 @Table(name = "item")
 @Getter
@@ -51,5 +52,9 @@ public class Item extends BaseEntity {
         }
 
         this.stockNumber = restStock; // 주문 후 남은 재고 수량을 상품의 현재 재고 값으로 할당한다.
+    }
+
+    public void addStock(int stockNumber) { // 상품의 재고를 증가시키는 메서드이다.
+        this.stockNumber += stockNumber;
     }
 }
