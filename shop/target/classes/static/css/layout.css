@@ -51,3 +51,22 @@ li > .a, .a:visited {
     font-family: 'LeferiPoint-BlackA';
     margin: 50px 200px 100px;
 }
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #ffffff;
+    background-color: #79797a;
+    border-color: #79797a;
+    text-decoration: none;
+    outline: none;
+    box-shadow: none;
+
+}
+
+.page-item .page-link {
+    z-index: 3;
+    color: #79797a;
+    background-color: #ffffff;
+    border-color: #79797a;
+    text-decoration: none;
+}
