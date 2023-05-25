@@ -94,7 +94,9 @@ public class CartController {
         }
 
         for (CartOrderDto cartOrder : cartOrderDtoList) { // 주문 권한을 체크한다.
-            return new ResponseEntity<String>("주문 권한이 없습니다.", HttpStatus.FORBIDDEN);
+            if(!cartService.validateCartItem(cartOrder.getCartItemId(), principal.getName())) {
+                return new ResponseEntity<String>("주문 권한이 없습니다.", HttpStatus.FORBIDDEN);
+            }
         }
 
         Long orderId = cartService.orderCartItem(cartOrderDtoList, principal.getName()); // 주문 로직 호출 결과 생성된 주문 번호를 반환 받는다.
