@@ -1,6 +1,6 @@
 package com.shop.repository;
 
-import com.querydsl.core.types.dsl.BooleanExpression; // Querydsl의 BooleanExpression를 통해서 where절에서 사용할 수 있는 값을 지원한다.
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.constant.ItemSellStatus;
@@ -98,6 +98,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom { // ItemR
                                 item.id,
                                 item.itemNm,
                                 item.itemDetail,
+                                item.itemSellStatus,
                                 itemImg.imgUrl,
                                 item.price
                         )
@@ -105,6 +106,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom { // ItemR
                 .from(itemImg)
                 .join(itemImg.item, item) // itemImg와 item을 내부 조인한다.
                 .where(itemImg.repImgYn.eq("Y")) // 상품 이미지의 경우 대표 상품 이미지만 불러온다.
+                .where(item.itemSellStatus.eq(ItemSellStatus.SELL))
                 .where(itemNmLike(itemSearchDto.getSearchQuery()))
                 .orderBy(item.id.desc())
                 .offset(pageable.getOffset())

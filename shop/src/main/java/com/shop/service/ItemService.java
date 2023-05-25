@@ -93,4 +93,6 @@ public class ItemService {
     public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getMainItemPage(itemSearchDto, pageable);
     }
+    
+    // TODO: 상품삭제 만들기
 }

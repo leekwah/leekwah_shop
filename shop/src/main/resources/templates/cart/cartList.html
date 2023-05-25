@@ -10,15 +10,12 @@
 
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
-
     <script th:inline="javascript">
-
         $(document).ready(function(){
             $("input[name=cartChkBox]").change( function(){
                 getOrderTotalPrice();
             });
         });
-
         function getOrderTotalPrice(){
             var orderTotalPrice = 0;
             $("input[name=cartChkBox]:checked").each(function() {
@@ -113,53 +110,6 @@
             });
         }
 
-        function orders(){
-            var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
-
-            var url = "/cart/orders";
-
-            var dataList = new Array();
-            var paramData = new Object();
-
-            $("input[name=cartChkBox]:checked").each(function() {
-                var cartItemId = $(this).val();
-                var data = new Object();
-                data["cartItemId"] = cartItemId;
-                dataList.push(data);
-            });
-
-            paramData['cartOrderDtoList'] = dataList;
-
-            var param = JSON.stringify(paramData);
-
-            $.ajax({
-                url      : url,
-                type     : "POST",
-                contentType : "application/json",
-                data     : param,
-                beforeSend : function(xhr){
-                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
-                    xhr.setRequestHeader(header, token);
-                },
-                dataType : "json",
-                cache   : false,
-                success  : function(result, status){
-                    alert("주문이 완료 되었습니다.");
-                    location.href='/orders';
-                },
-                error : function(jqXHR, status, error){
-
-                    if(jqXHR.status == '401'){
-                        alert('로그인 후 이용해주세요');
-                        location.href='/members/login';
-                    } else{
-                        alert(jqXHR.responseJSON.message);
-                    }
-
-                }
-            });
-        }
 
     </script>
 
@@ -188,6 +138,11 @@
         }
         .fs24{
             font-size:24px
+        }
+        .close {
+            background-color: #000000;
+            color: #ffffff;
+
         }
     </style>
 </th:block>
@@ -225,20 +180,28 @@
                         <img th:src="${cartItem.imgUrl}" class = "rounded repImg" th:alt="${cartItem.itemNm}">
                     </div>
                     <div class="align-self-center">
-                        <span th:text="${cartItem.itemNm}" class="fs24 font-weight-bold"></span>
-                        <div class="fs18 font-weight-light">
-                            <span class="input-group mt-2">
-                                <span th:id="'price_' + ${cartItem.cartItemId}"
-                                      th:data-price="${cartItem.price}"
-                                      th:text="${cartItem.price} + '원'" class="align-self-center mr-2">
+                        <div class="flex-column mb-3">
+                            <span style="text-align: center;" th:text="${cartItem.itemNm}" class="fs24 font-weight-bold"></span>
+                        </div>
+                        <div class="flex-column">
+                            <div class="fs18 font-weight-light">
+                                <span class="input-group mt-2">
+                                    <span th:id="'price_' + ${cartItem.cartItemId}"
+                                          th:data-price="${cartItem.price}"
+                                          th:text="${cartItem.price} + '원'" class="align-self-center mr-2">
+                                    </span>&nbsp;&nbsp;&nbsp;
+                                    <input type="number" name="count" th:id="'count_' + ${cartItem.cartItemId}"
+                                           th:value="${cartItem.count}" min="1"
+                                           onchange="changeCount(this)" class="form-control mr-2" >
+                                    <button type="button" class="close" aria-label="Close">
+                                        <span aria-hidden="true" th:data-id="${cartItem.cartItemId}" onclick="deleteCartItem(this)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                                            </svg>
+                                        </span>
+                                    </button>
                                 </span>
-                                <input type="number" name="count" th:id="'count_' + ${cartItem.cartItemId}"
-                                       th:value="${cartItem.count}" min="1"
-                                       onchange="changeCount(this)" class="form-control mr-2" >
-                                <button type="button" class="close" aria-label="Close">
-                                    <span aria-hidden="true" th:data-id="${cartItem.cartItemId}" onclick="deleteCartItem(this)">&times;</span>
-                                </button>
-                            </span>
+                            </div>
                         </div>
                     </div>
                 </td>
@@ -251,14 +214,12 @@
             </tbody>
         </table>
 
-        <h2 class="text-center">
-            총 주문 금액 : <span id="orderTotalPrice" class="text-danger">0원</span>
-        </h2>
-
-        <div class="text-center mt-3">
-            <button type="button" class="btn btn-primary btn-lg" onclick="orders()">주문하기</button>
+        <div class="mt-3">
+            <h5 class="text-center">
+                장바구니 총 금액 : <span id="orderTotalPrice" class="text-danger">0원</span>
+            </h5>
+            <a style="text-align: center" type="button" class="btn btn-secondary" th:href="@{/}">돌아가기</a>
         </div>
-
     </div>
 
 </div>

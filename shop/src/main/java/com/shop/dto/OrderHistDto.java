@@ -19,7 +19,7 @@ public class OrderHistDto {
 
     private OrderStatus orderStatus; // 주문 상태
 
-    private List<OrderItemDto> orderItemDtoList = new ArrayList<>(); // 주문 상품 리트스
+    private List<OrderItemDto> orderItemDtoList = new ArrayList<>(); // 주문 상품 리스트
 
     public OrderHistDto(Order order) { // OrderHistDto 클래스의 생성자로 order 객체를 파라미터로 받아서 멤버 변수 값을 설정한다.
         this.orderId = order.getId();

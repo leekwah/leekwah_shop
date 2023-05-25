@@ -15,6 +15,7 @@ public class FileService {
      */
     public String uploadFile(String uploadPath, String originalFileName, byte[] fileData) throws Exception {
         UUID uuid = UUID.randomUUID();
+        // uploadPath = "file:///C:/shop/";
 
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
         String savedFileName = uuid.toString() + extension; // UUID로 받은 값과 원래 파일의 이름의 확장자를 조합해서 저장될 파일의 이름을 만든다.
