@@ -60,7 +60,10 @@ li > .a, .a:visited {
     text-decoration: none;
     outline: none;
     box-shadow: none;
+}
 
+.form-signin {
+    font-family: 'LeferiPoint-BlackA';
 }
 
 .page-item .page-link {

@@ -52,6 +52,16 @@
   </style>
 </th:block>
 
+<th:block layout:fragment="javascript">
+  <script>
+    $('#noticeModalBtn').click(function(e){
+      e.preventDefault();
+      $('#noticeModal').modal("show");
+    });
+
+  </script>
+</th:block>
+
 <div layout:fragment="content">
   <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
   <!-- 쇼핑몰 오른쪽 상단의 Search 기능을 이용해서 상품을 검색할 때 페이징 처리 시 해당 검색어를 유지하기 위해서 hidden 값으로 검색어를 유지한다. -->
@@ -59,6 +69,14 @@
     <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + ' 검색 결과'"></p>
     <!-- 상품을 검색했을 때 어떤 검색어로 조회된 결과인지 보여준다. -->
   </div>
+
+  <div class="text-center mb-3">
+    <button type="button" class="w-100 btn btn-outline-danger text-center mb-3" data-bs-toggle="modal" data-bs-target="#noticeModal" id="noticeModalBtn">
+      > 공지사항 <
+    </button>
+
+  </div>
+
 
   <div class="row image-container">
     <th:block th:each="item, status: ${items.getContent()}">
@@ -103,5 +121,23 @@
 
     </ul>
   </div>
+
+  <!-- Vertically centered modal -->
+    <div class="modal" tabindex="-1" id="noticeModal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h6 class="display-7 modal-title" id="noticeModalLabel">공지사항</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center" id="noticeModalInput">
+            <p style="margin-bottom: 0">서버는 <span style="color: red">낮 1시</span>부터 <span style="color: red">밤 12시까지</span> 오픈됩니다.<br>
+            문제 사항 혹은 오류 발생 시 연락주세요.</p>
+          </div>
+        </div>
+      </div>
+
+  </div>
+
 
 </div>
