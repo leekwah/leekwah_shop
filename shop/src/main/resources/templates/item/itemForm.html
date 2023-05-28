@@ -69,8 +69,8 @@
 
     <input type="hidden" th:field="*{id}">
 
-    <div class="form-group">
-      <select th:field="*{itemSellStatus}" class="custom-select">
+    <div class="form-group mb-3">
+      <select th:field="*{itemSellStatus}" class="form-select">
         <option value="SELL">판매중</option>
         <option value="SOLD_OUT">품절</option>
       </select>
@@ -100,12 +100,13 @@
     </div>
     <p th:if="${#fields.hasErrors('stockNumber')}" th:errors="*{stockNumber}" class="fieldError">Incorrect data</p>
 
-    <div class="input-group">
+    <div class="input-group mb-3">
       <div class="input-group-prepend">
         <span class="input-group-text">상품 상세 내용</span>
       </div>
-      <textarea class="form-control" aria-label="With textarea" th:field="*{itemDetail}"></textarea>
+      <input type="text" class="form-control" th:field="*{itemDetail}">
     </div>
+
     <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="fieldError">Incorrect data</p>
 
     <div th:if="${#lists.isEmpty(itemFormDto.itemImgDtoList)}">
@@ -133,6 +134,7 @@
     <div th:unless="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
       <button th:formaction="@{'/admin/item/' + ${itemFormDto.id} }" type="submit" class="btn btn-primary">수정</button>
     </div>
+
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
   </form>

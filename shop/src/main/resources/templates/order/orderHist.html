@@ -91,20 +91,23 @@
 
 <div layout:fragment="content" class="content-mg">
 
-  <h2 class="mb-4">
-    구매 이력
+  <h2 class="mb-4 text-center">
+    구매 목록
   </h2>
+  <br class="mb-4">
 
   <div th:each="order : ${orders.getContent()}">
 
-    <div class="d-flex mb-3 align-self-center">
-      <h4 th:text="${order.orderDate} + ' 주문'"></h4>
-      <div class="ml-3">
+    <div class="d-flex align-self-center justify-content-between">
+      <div class="text-left">
+      <p class="display-7" th:text="${order.orderDate} + ' 주문'"></p>
+      </div>
+      <div class="text-right">
         <th:block th:if="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">
           <button type="button" class="btn btn-outline-secondary" th:value="${order.orderId}" onclick="cancelOrder(this.value)">주문취소</button>
         </th:block>
         <th:block th:unless="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">
-          <h4>(취소 완료)</h4>
+          <p class="display-7">(취소 완료)</h4>
         </th:block>
       </div>
     </div>
